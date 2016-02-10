@@ -2,9 +2,7 @@
 
 require __DIR__ . '/../autoload.php';
 
-$newsOne = \Model\News::findById($_GET['id']); //Получили одну новость по id
 $view = new \View\php\View();
-$view->article = $newsOne; //в свойство article сохраняем объект Новость
-$view->author = $newsOne->getAuthor(); //в свойство author сохраняем объект Автор
+$view->article = \Model\News::findById($_GET['id']); //сохраняем в свойство article опеределенную новость по id
 
-$view->display(__DIR__ . '/../View/templ/article.php'); //подключаем шаблон
+$view->display(__DIR__ . '/../View/templates/article.php'); //подключаем шаблон

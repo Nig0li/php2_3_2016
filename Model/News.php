@@ -32,7 +32,8 @@ class News extends Ancestor implements \ArrayAccess
 
     /**
      * Метод, возвращающий объект класса Author
-     * @return object Author or bool
+     * @return object Author | bool
+     * @deprecated
      */
     public function getAuthor()
     {
@@ -44,4 +45,35 @@ class News extends Ancestor implements \ArrayAccess
         }
     }
 
+    /**
+     * Метод - чтение из недоступного свойства
+     * @param $name имя недоступного свойства
+     * @return object | bool | null
+     */
+    public function __get($name)
+    {
+        switch ($name) {
+            case 'author':
+                return Author::findById($this->author_id);
+                break;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Метод - проверка существует ли свойство
+     * @param $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        switch ($name) {
+            case 'author':
+                return !empty($this->author_id);
+                break;
+            default:
+                return false;
+        }
+    }
 }
