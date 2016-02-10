@@ -63,7 +63,7 @@ class News extends Ancestor implements \ArrayAccess
 
     /**
      * Метод - проверка существует ли свойство
-     * @param $name
+     * @param $name имя недоступного свойства
      * @return bool
      */
     public function __isset($name)
