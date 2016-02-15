@@ -15,7 +15,7 @@ abstract class Ancestor
      * Метод - проверка новая ли у нас модель
      * @return null
      */
-    public function isNews()
+    public function isNew()
     {
         return empty($this->id);
     }
@@ -26,7 +26,7 @@ abstract class Ancestor
      */
     public function insert()
     {
-        if (!$this->isNews()) { //Проверяем новый ли объект
+        if (!$this->isNew()) { //Проверяем новый ли объект
             return;
         }
 
@@ -38,16 +38,14 @@ abstract class Ancestor
             }
             $columns[] = $key; // Собираем массив свойств объекта
             $values[':' . $key] = $val; // Собираем массив свойство=значение
-        } //var_dump($values); die;
+        }
 
         //Запрос в БД
         $sql = 'INSERT INTO ' . static::TABLE . '(' . implode(',', $columns) . ')
             VALUES (' . implode(',', array_keys($values)) . ')';
-        //echo $sql;
         //Выполняем запрос к БД
         $db = Db::instance();
         $res = $db->execute($sql, $values);
-        //var_dump($res);
         if (false !== $res) {
             $this->id = $db->lastInsertId();
             return true;
@@ -63,7 +61,6 @@ abstract class Ancestor
     public static function findAll()
     {
         $sql = 'SELECT * FROM ' . static::TABLE;
-        //var_dump($sql);
         $db = Db::instance();
         return $db->query($sql, static::class);
     }
@@ -75,15 +72,12 @@ abstract class Ancestor
      */
     public static function findById(int $id) //тест метода в /tests/test_lesson1.php - строка 93
     {
-        //var_dump($id);
         $sql = 'SELECT * FROM ' . static::TABLE . ' WHERE id=:id';
-        //var_dump($sql);
         $mass = [
             ':id' => $id,
         ];
         $db = Db::instance();
         $res = $db->query($sql, static::class, $mass);
-        //var_dump($res);
         if (null == $res) {
             return false;
         } else {
@@ -106,12 +100,11 @@ abstract class Ancestor
         foreach ($this as $k => $v) {
             $columns[] = $k . '=:' . $k;
             $values[':' . $k] = $v;
-        } //var_dump($values); //die;
+        }
 
         $sql = 'UPDATE ' . static::TABLE .
             ' SET ' . implode(',', $columns)
             . ' WHERE id=:id';
-        //echo $sql;
         $db = Db::instance();
         $res = $db->execute($sql, $values);
         if (false !== $res) {
@@ -125,7 +118,7 @@ abstract class Ancestor
      */
     public function save()
     {
-        if (!$this->isNews()) {
+        if (!$this->isNew()) {
             return $this->update();
         } else {
             return $this->insert();
